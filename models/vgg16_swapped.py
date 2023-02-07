@@ -8,44 +8,49 @@ class VGG(nn.Module):
         # a vector descriping VGG16 dimensions
         vec = [
             64,
-            64,
+            "L",
             "M",
             128,
-            128,
+            "L",
             "M",
             256,
             256,
             256,
-            256,
+            "L",
             "M",
             512,
             512,
             512,
-            512,
+            "L",
             "M",
             512,
             512,
             512,
-            512,
+            "L",
             "M",
         ]
 
         self.listModule = []
         in_channels = 3
-
+        s = 0
         for v in vec:
             if v == "M":
-                self.listModule += [nn.MaxPool2d(kernel_size=2, stride=2)]
+                self.listModule += [nn.MaxPool2d(kernel_size=2, stride=2),nn.ReLU(inplace=True)]
+            elif v== "L":
+                conv2d = nn.Conv2d(in_channels, s, kernel_size=3, padding=1)
+                self.listModule += [conv2d]
+                in_channels = s
+
             else:
-                v = int(v)
-                conv2d = nn.Conv2d(in_channels, v, kernel_size=3, padding=1)
+                s = int(v)
+                conv2d = nn.Conv2d(in_channels, s, kernel_size=3, padding=1)
                 self.listModule += [conv2d, nn.ReLU(inplace=True)]
-                in_channels = v
+                in_channels = s
 
         self.features = nn.Sequential(*self.listModule)
 
         self.avgpool = nn.AdaptiveAvgPool2d((7, 7))
-        
+
         self.cl = [
             nn.Linear(512 * 7 * 7, 4096),
             nn.ReLU(True),
@@ -84,3 +89,4 @@ torch.cuda.synchronize()
 curr_time = starter1.elapsed_time(ender1)
 print(curr_time)
 print(y.size())
+
