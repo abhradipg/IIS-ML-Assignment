@@ -65,3 +65,11 @@ class VGG(nn.Module):
         x = x.flatten(1)
         x = self.classifier(x)
         return x
+
+
+inpSize = (16, 3, 224, 224)
+device1 = torch.device("cuda")
+device2 = torch.device("cpu")
+model = VGG().to(device1)
+x = torch.randn(inpSize).to(device1)
+
