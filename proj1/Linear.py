@@ -16,7 +16,7 @@ def print_gpu_stat(command):
 
 
 def main(args):
-    inpSize = (64, 64, 224, 224)
+    inpSize = (16, 512 * 7 * 7)
     device = torch.device("cuda:0")
     starter = torch.cuda.Event(enable_timing=True)
     ender = torch.cuda.Event(enable_timing=True)
@@ -24,7 +24,7 @@ def main(args):
     command = "nvidia-smi dmon -o T -c 1| grep 0"
     print_gpu_stat(command)
     time.sleep(2);
-    model = nn.ReLU(inplace=True).to(device)
+    model = nn.Linear(512 * 7 * 7, 4096).to(device)
     x = torch.randn(inpSize).to(device)
     y = model(x)
     torch.cuda.synchronize()
@@ -43,3 +43,5 @@ def main(args):
 
 if __name__ == "__main__":
     main(None)
+
+

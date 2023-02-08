@@ -24,7 +24,7 @@ def main(args):
     command = "nvidia-smi dmon -o T -c 1| grep 0"
     print_gpu_stat(command)
     time.sleep(2);
-    model = nn.ReLU(inplace=True).to(device)
+    model = nn.Conv2d(64, 64, kernel_size=3, padding=1).to(device)
     x = torch.randn(inpSize).to(device)
     y = model(x)
     torch.cuda.synchronize()
@@ -43,3 +43,4 @@ def main(args):
 
 if __name__ == "__main__":
     main(None)
+

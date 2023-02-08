@@ -12,5 +12,5 @@ def print_gpu_stat(command):
     get_gpu_stat(command)
 
 
-command = "nvidia-smi pmon -c 1"
+command = "nvidia-smi dmon -o T -c 1| grep 0"
 print_gpu_stat(command)
