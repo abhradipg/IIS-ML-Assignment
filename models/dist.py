@@ -118,7 +118,7 @@ def main(args):
         [transforms.ToTensor(),
         transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))])
 
-    batch_size = 16
+    batch_size = 8
     Dataset=MyDataset()
     init_distributed(args)
     sampler_train = DistributedSampler(Dataset, shuffle=True)
@@ -138,8 +138,8 @@ def main(args):
         schedule=torch.profiler.schedule(
             wait=1,
             warmup=1,
-            active=2),
-        on_trace_ready=torch.profiler.tensorboard_trace_handler('./result', worker_name='worker0'),
+            active=8),
+        on_trace_ready=torch.profiler.tensorboard_trace_handler('./result'),
         record_shapes=True,
         profile_memory=True,  # This will take 1 to 2 minutes. Setting it to False could greatly speedup.
         with_stack=True
