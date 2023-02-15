@@ -4,8 +4,8 @@ import torch.nn as nn
 
 def main(args):
     inpSize = (16, 64, 112, 112)
-    device1 = torch.device("cuda:7")
-    device2 = torch.device("cuda:5")
+    device1 = torch.device("cuda:4")
+    device2 = torch.device("cuda:3")
     num_of_conv1 = 350
     num_of_conv2 = 150
     num_of_fc1 = 250

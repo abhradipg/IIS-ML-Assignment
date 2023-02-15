@@ -81,7 +81,7 @@ class VGG(nn.Module):
 def init_distributed(args):
     if 'RANK' in os.environ and 'WORLD_SIZE' in os.environ:
       args.world_size = int(os.environ['WORLD_SIZE'])
-      args.gpu = int(os.environ['LOCAL_RANK'])
+      args.gpu = int(os.environ['LOCAL_RANK'])+1
     else:
         print('Not using distributed mode')
         args.gpu = 0
@@ -114,10 +114,6 @@ class MyDataset():
 
 
 def main(args):
-    transform = transforms.Compose(
-        [transforms.ToTensor(),
-        transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))])
-
     batch_size = 8
     Dataset=MyDataset()
     init_distributed(args)
@@ -137,19 +133,22 @@ def main(args):
             torch.profiler.ProfilerActivity.CUDA],
         schedule=torch.profiler.schedule(
             wait=1,
-            warmup=1,
-            active=8),
+            warmup=3,
+            active=16,
+            repeat=5),
         on_trace_ready=torch.profiler.tensorboard_trace_handler('./result'),
         record_shapes=True,
         profile_memory=True,  # This will take 1 to 2 minutes. Setting it to False could greatly speedup.
         with_stack=True
     ) as p:
-        for epoch in range(4):  # loop over the dataset multiple times
+        for epoch in range(1):  # loop over the dataset multiple times
 
             sampler_train.set_epoch(epoch)
             running_loss = 0.0
+            step = 0
             for i, data in enumerate(trainloader, 0):
                 # get the inputs; data is a list of [inputs, labels]
+                step=step+1
                 inputs, labels = data
                 inputs = inputs.to(args.gpu)
                 labels = labels.to(args.gpu)
@@ -162,6 +161,8 @@ def main(args):
                 loss = criterion(outputs, labels)
                 loss.backward()
                 optimizer.step()
+                if step>=100:
+                    break
                 p.step()
 
 
