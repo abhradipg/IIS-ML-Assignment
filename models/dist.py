@@ -92,7 +92,7 @@ def init_distributed(args):
     torch.cuda.set_device(args.gpu)
 
     os.environ['MASTER_ADDR']= '127.0.0.1'
-    os.environ['MASTER_PORT']= '29500'
+    os.environ['MASTER_PORT']= '29600'
     dist.init_process_group(backend='nccl', world_size=args.world_size)
     dist.barrier()
 
@@ -114,7 +114,7 @@ class MyDataset():
 
 
 def main(args):
-    batch_size = 8
+    batch_size = 4
     Dataset=MyDataset()
     init_distributed(args)
     sampler_train = DistributedSampler(Dataset, shuffle=True)
@@ -134,7 +134,7 @@ def main(args):
         schedule=torch.profiler.schedule(
             wait=1,
             warmup=3,
-            active=16,
+            active=20,
             repeat=5),
         on_trace_ready=torch.profiler.tensorboard_trace_handler('./result'),
         record_shapes=True,
@@ -161,7 +161,7 @@ def main(args):
                 loss = criterion(outputs, labels)
                 loss.backward()
                 optimizer.step()
-                if step>=100:
+                if step>120:
                     break
                 p.step()
 
