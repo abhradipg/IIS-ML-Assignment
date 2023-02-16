@@ -11,12 +11,12 @@ def get_gpu_stat(command):
 
 
 def print_gpu_stat(command):
-    Timer(0.1, print_gpu_stat ,[command]).start()
+    Timer(0.05, print_gpu_stat ,[command]).start()
     get_gpu_stat(command)
 
 
 def main(args):
-    inpSize = (16, 512 * 7 * 7)
+    inpSize = (64, 512 * 7 * 7)
     device = torch.device("cuda:0")
     starter = torch.cuda.Event(enable_timing=True)
     ender = torch.cuda.Event(enable_timing=True)
