@@ -25,7 +25,8 @@ def main():
     
 
     batch_size = 64
-    train_loader, test_loader = load_data(batch_size, True)
+    use_cuda = torch.cuda.is_available()
+    train_loader, test_loader = load_data(batch_size, use_cuda)
     data, label = next(iter(train_loader))
 
     #measuring peak memory on inference on a batch of 64
