@@ -18,7 +18,7 @@ def main():
 
     use_cuda = torch.cuda.is_available()
     train_loader, test_loader = load_data(batch_size, use_cuda)
-    data, label = next(iter(train_loader))
+    data, label = next(iter(test_loader))
 
     #measuring peak memory on inference on a batch of 64
     tracemalloc.start()
