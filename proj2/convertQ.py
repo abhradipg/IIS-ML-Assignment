@@ -19,9 +19,9 @@ def main():
     # fusion command is provided for your beneift
     model_fp32_fused = torch.quantization.fuse_modules(model, [['conv1', 'relu1'], ['conv2', 'relu2']])
     model_fp32_prepared = torch.quantization.prepare(model_fp32_fused)
+    data,label=next(iter(train_loader))
+    model_fp32_prepared(data)
     model_int8 = torch.quantization.convert(model_fp32_prepared)
-    
-
     
     
     # Be sure to save your final model

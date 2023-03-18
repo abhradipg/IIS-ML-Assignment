@@ -40,6 +40,12 @@ def main():
 
     print(prof.key_averages().table(sort_by="cpu_time_total", row_limit=100))
 
+    with profile(activities=[ProfilerActivity.CPU],record_shapes=True) as prof:
+        output = model(data)
+
+
+    print(prof.key_averages().table(sort_by="cpu_time_total", row_limit=100))
+
 
 if __name__ == "__main__":
     main()

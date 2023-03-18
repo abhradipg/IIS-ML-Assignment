@@ -50,6 +50,12 @@ def main():
     print(prof.key_averages().table(sort_by="cpu_time_total", row_limit=100))
 
 
+    with profile(activities=[ProfilerActivity.CPU],record_shapes=True) as prof:
+        output = model(data)
+
+
+    print(prof.key_averages().table(sort_by="cpu_time_total", row_limit=100))
+
     #measuring compression ratio
     original = os.path.getsize("mnist_cnn.pt")/1e3
     quantized = os.path.getsize("mnist_cnn_int8.pt")/1e3
